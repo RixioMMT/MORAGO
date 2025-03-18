@@ -1,0 +1,725 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Query {
+    getCoinById(id: ID!): CoinDTO
+    getAllCoins(pagingInput: PagingInput): CoinPageOutput
+
+    getAppVersionByPlatform(platform: EPlatform!): AppVersionDTO
+    getAllAppVersions(input: PagingInputAppVersion): AppVersionPageOutput
+
+    getAllCategoriesByPaging(input: PagingInput): CategoryPage
+    getCategoryById(id: ID!): CategoryDTO
+    getCategoryByName(name: String!): CategoryDTO
+    getCategoryByStatusIsActiveByPaging(input: PagingInput): CategoryPage
+
+    getAllThemesByPaging(input: PagingInput): ThemePage
+    getThemeById(id: ID!): ThemeDTO
+    getThemesByCategoriesId(input: PagingInput, id: ID): ThemePage
+    getThemesByName(name: String): ThemeDTO
+    getThemeByIsActiveStatus(input: PagingInput): ThemePage
+
+    getAllFrequentlyAskedQuestions(pagingInput: PagingInput): FrequentlyAskedQuestionPageOutput
+    getFrequentlyAskedQuestionById(id: ID!): FrequentlyAskedQuestionsDTO
+    getAllFrequentlyAskedQuestionsByCategory(pagingInput: PagingInput, category: QuestionsCategories): FrequentlyAskedQuestionPageOutput
+
+#    getAllUsers: [UserDTO]
+    getUserById(id: ID!): UserDTO
+    getUserByPhone(phone: String): UserDTO
+    getAuthenticatedUser: UserDTO
+    existsUserByPhone(phone: String): Boolean
+    getAllUsersPaged(page: Int, size: Int): UserPage
+    searchUsers(searchInput: String, page: Int, size: Int): UserPage
+
+#    testUser: [UserDTO]
+#    testTranslator: [UserDTO]
+#    testAuthentication: [UserDTO]
+
+    getAllUserProfiles(pagingInput: PagingInput!): UserProfilePageOutput!
+    getUserProfileById(id: ID): UserProfileDTO
+
+    getAllTranslatorProfilesPaged(page: Int, size: Int): TranslatorPage
+    getTranslatorProfileById(id: ID): TranslatorProfileDTO
+    getTranslatorProfilesByIsOnlineAndThemeIdPaged(page: Int, size: Int, id: ID, isOnline: Boolean): TranslatorPage
+    getTranslatorProfilesByThemeIdPaged(page: Int, size: Int, id: ID): TranslatorPage
+    getTranslatorProfilesByThemeNamePaged(page: Int, size: Int, name: String): TranslatorPage
+    searchTranslators(searchInput: String, page: Int, size: Int): TranslatorPage
+
+    getAllLanguages(pagingInput: PagingInput): LanguagePageOutput
+    getLanguageById(id: ID): LanguageDTO
+
+    getAllDebtors(pagingInput: PagingInput!): DebtorPageOutput
+    getDebtorById(id: ID!): DebtorDTO
+    getDebtorByUserId(userId: ID!): [DebtorDTO]
+
+    getDepositById(id: ID!): DepositsDTO
+    getDepositsByStatus(status: PaymentStatus!, pagingInput: PagingInput!): DepositsPageOutput
+    getDepositsByUserId(userId: ID!, pagingInput: PagingInput!): DepositsPageOutput
+
+    getAllNotification(pagingInput: PagingInput!): NotificationPageOutput
+    getNotificationById(id: ID!): NotificationDTO
+    getNotificationsByUserId(userId: ID!): [NotificationDTO]
+
+    getAllWithdrawals(pagingInput: PagingInput!): WithdrawalsPageOutput
+    getWithdrawalsById(id: ID!): WithdrawalsDTO
+    getWithdrawalsByStatus(status: PaymentStatus!, pagingInput: PagingInput!): WithdrawalsPageOutput
+    getWithdrawalsByUserId(userId: ID!, pagingInput: PagingInput!): WithdrawalsPageOutput
+    getUsersAndWithdrawals(pagingInput: PagingInput!): UsersAndWithdrawalsPageOutput
+
+    getAllCalls(pagingInput: PagingInput!): CallPageOutput
+    getCallById(id: ID!): CallDTO
+    getAllFreeCalls(pagingInput: PagingInput!): CallPageOutput
+    getCallsByUserId(userid: ID!, pagingInput: PagingInput!): CallPageOutput
+    getMissedCalls(userId: ID!, pagingInput: PagingInput!): CallPageOutput
+    getCallsByOutgoingIncoming(pagingInput: PagingInput!): CallPageOutput
+    getCallsByOutgoingIncomingStatus(status: CallStatus, pagingInput: PagingInput!): CallPageOutput
+
+    getAllRatings(pagingInput: PagingInput!): RatingsPageOutput
+    getRatingById(id: ID!): RatingDTO
+    getAverageRating(toWhomUserId: ID!): Float
+
+    # Consultant Profile Queries
+    getAllConsultantProfilesPaged(pagingInput: PagingInput!): ConsultantPage
+    getConsultantProfileById(id: ID!): ConsultantProfileDTO
+    getConsultantProfilesByIsOnlineAndLanguageIdPaged(pagingInput: PagingInput!, id: ID!, isOnline: Boolean!): ConsultantPage
+    getConsultantProfilesByLanguageIdPaged(pagingInput: PagingInput!, id: ID!): ConsultantPage
+    getConsultantProfilesByLanguageNamePaged(pagingInput: PagingInput!, name: String!): ConsultantPage
+    searchConsultants(searchInput: String!, pagingInput: PagingInput!): ConsultantPage
+}
+
+type Mutation {
+    createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersionDTO
+    updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersionDTO
+    deleteAppVersion(platform: EPlatform!): Boolean
+
+    createCoin(input: CreateCoinInput): CoinDTO
+    updateCoin(input: UpdateCoinInput): CoinDTO
+    deleteCoin(id: ID!): Boolean
+
+    createCategory(input: CreateCategoryInput): CategoryDTO
+    updateCategory(input: UpdateCategoryInput): CategoryDTO
+    deleteCategoryById(id: ID!): Boolean
+    changeCategoryStatus(id: ID!): Boolean
+
+    createTheme(input: CreateThemeInput): ThemeDTO
+    updateThemeById(input: UpdateThemeInput): ThemeDTO
+    deleteThemeById(id: ID!): Boolean
+    changeThemeStatus(id: ID!): Boolean
+    changeThemePopularity(id: ID, themePopularity: Boolean): Boolean
+
+    createFrequentlyAskedQuestion(input: CreateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsDTO
+    updateFrequentlyAskedQuestion(input: updateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsDTO
+    deleteFrequentlyAskedQuestionById(id: ID!): Boolean
+
+    signUpAsUser(registerUserInput: RegisterUserInput): String
+    signUpAsTranslator(registerTranslatorConsultantInput: RegisterTranslatorConsultantInput): String
+    signUpAsConsultant(registerTranslatorConsultantInput: RegisterTranslatorConsultantInput): String
+    logIn(loginUserInput: LoginUserInput): String
+
+    addUser(userInput: UserInput): UserDTO
+    updateUser(id: ID, userInput: UserInput): UserDTO
+    deleteUser(id: ID): Boolean
+    changeIsActive(id: ID, isActive: Boolean): Boolean
+    changeIsDebtor(id: ID, isDebtor: Boolean): Boolean
+    addFcmToken(fcmToken: String, id: ID): UserDTO
+    deleteFcmToken(id: ID): Boolean
+    addApnToken(apnToken: String, id: ID): UserDTO
+    deleteApnToken(id: ID): Boolean
+
+    addUserProfile(isFreeCallMade: Boolean, id: ID): UserProfileDTO
+    updateUserProfile(id: ID, isFreeCallMade: Boolean): UserProfileDTO
+    deleteUserProfile(id: ID): Boolean
+    updateUserProfileByUserId(id: ID, isFreeCallMade: Boolean): UserProfileDTO
+    changeIsFreeCallMade(id: ID, isFreeCallMade: Boolean): Boolean
+    changeBalanceByUserProfileId(id: ID, balance: Float): UserDTO
+
+    addTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfileDTO
+    updateTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfileDTO
+    deleteTranslatorProfile(id: ID): Boolean
+    updateTranslatorProfileByUserId(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfileDTO
+    changeIsAvailable(id: ID, isAvailable: Boolean): Boolean
+    changeIsOnline(id: ID, isOnline: Boolean): Boolean
+    changeBalanceForTranslatorProfileId(id: ID, balance: Float): UserDTO
+    addLanguageToTranslatorProfile(languageId: ID, translatorProfileId: ID): TranslatorProfileDTO
+    deleteLanguageFromTranslatorProfile(languageId: ID, translatorProfileId: ID): Boolean
+
+    addLanguage(languageInput: LanguageInput): LanguageDTO
+    updateLanguage(id: ID, languageInput: LanguageInput): LanguageDTO
+    deleteLanguage(id: ID): Boolean
+
+    addDeposit(createDepositsInput: CreateDepositsInput): DepositsDTO
+    updateDeposit(id: ID!, updateDepositsInput: UpdateDepositsInput): DepositsDTO
+    deleteDeposit(id: ID!): Boolean
+
+    addDebtor(createDebtorInput: CreateDebtorInput): DebtorDTO
+    updateDebtor(id: ID!, updateDebtorInput: UpdateDebtorInput): DebtorDTO
+    deleteDebtor(id: ID!): Boolean
+
+    addNotification(createNotificationInput: CreateNotificationInput): NotificationDTO
+    updateNotification(id: ID!, updateNotificationInput: UpdateNotificationInput): NotificationDTO
+    deleteNotification(id: ID!): Boolean
+
+    addWithdrawal(createWithdrawalInput: CreateWithdrawalsInput): WithdrawalsDTO
+    updateWithdrawal(id: ID!, updateWithdrawalInput: UpdateWithdrawalsInput): WithdrawalsDTO
+    deleteWithdrawal(id: ID!): Boolean
+
+    createCall(input: CreateCallInput): CallDTO
+    updateCall(id: ID!, input: CallUpdateInput): CallDTO
+    deleteCall(id: ID!): Boolean
+    endCall(callId: ID!, status: CallStatus!, duration: Int!): Boolean
+    rateCall(userId: ID!, callId: ID!, grade: Float!): Boolean
+
+    updateRating(id: ID!, update: UpdateRatingInput): RatingDTO
+    createRating(ratingInput: RatingInput): RatingDTO
+    deleteRating(id: ID!): Boolean
+
+    # Consultant Profile Mutations
+    addConsultantProfile(id: ID, consultantProfileInput: ConsultantProfileInput): ConsultantProfileDTO
+    updateConsultantProfile(id: ID, consultantProfileInput: ConsultantProfileInput): ConsultantProfileDTO
+    deleteConsultantProfile(id: ID): Boolean
+    updateConsultantProfileByUserId(id: ID, consultantProfileInput: ConsultantProfileInput): ConsultantProfileDTO
+    changeIsAvailableForConsultant(id: ID, isAvailable: Boolean): Boolean
+    changeIsOnlineForConsultant(id: ID, isOnline: Boolean): Boolean
+    changeBalanceForConsultantProfileId(id: ID, balance: Float): UserDTO
+    addLanguageToConsultantProfile(languageId: ID, consultantProfileId: ID): ConsultantProfileDTO
+    deleteLanguageFromConsultantProfile(languageId: ID, consultantProfileId: ID): Boolean
+
+    # Consultant Call Mutations
+    createConsultantCall(input: CreateConsultantCallInput): CallDTO
+    endConsultantCall(callId: ID!, status: CallStatus!, duration: Int!): Boolean
+    rateConsultantCall(userId: ID!, callId: ID!, translatorGrade: Float!, consultantGrade: Float!): Boolean
+#    addFile(file: Upload!): FileDTO
+}
+
+type AppVersionDTO {
+    platform: EPlatform
+    min: String
+    latest: String
+    createdAt: String
+    updatedAt: String
+}
+type CoinDTO {
+    id: ID
+    coin: String
+    won: String
+    createdAt: String
+    updatedAt: String
+}
+type FileDTO {
+    id: ID
+    path: String
+    type: String
+    originalTitle: String
+    createdAt: String
+    updatedAt: String
+}
+type CategoryDTO {
+    id: ID
+    name: String
+    isActive: Boolean
+}
+type ThemeDTO {
+    id: ID
+    name: String
+    koreanTitle: String
+    price: Float
+    nightPrice: Float
+    description: String
+    isPopular: Boolean
+    isActive: Boolean
+    category: CategoryDTO
+    icon: FileDTO
+    createdAt: String
+    updatedAt: String
+}
+type ThemePage {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [ThemeDTO]
+}
+type CategoryPage {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [CategoryDTO]
+}
+
+type DepositsPageOutput {
+currentPage: Int
+totalPages: Int
+totalElements: Int
+objectList: [DepositsDTO]
+}
+type UsersAndWithdrawalsPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [UsersAndWithdrawalsDTO]
+}
+type FrequentlyAskedQuestionsDTO {
+    question: String
+    answer: String
+    category: QuestionsCategories
+}
+type LanguageDTO {
+    id: ID!
+    name: String
+}
+type UserDTO {
+    id: ID!
+    phone: String!
+    firstName: String
+    lastName: String
+    balance: Float
+    fcmToken: String
+    apnToken: String
+    ratings: Float
+    totalRatings: Int
+    isActive: Boolean
+    isDebtor: Boolean
+    onBoardingStatus: Int
+}
+type UserPage {
+    content: [UserDTO]
+    totalPages: Int
+    totalElements: Int
+    size: Int
+    number: Int
+}
+type UserProfileDTO {
+    id: ID!
+    isFreeCallMade: Boolean
+}
+type TranslatorPage {
+    content: [TranslatorProfileDTO]
+    totalPages: Int
+    totalElements: Int
+    size: Int
+    number: Int
+}
+type TranslatorProfileDTO {
+    id: ID!
+    dateOfBirth: String
+    email: String
+    isAvailable: Boolean
+    isOnline: Boolean
+    levelOfKorean: String
+}
+
+type ConsultantProfileDTO {
+    id: ID!
+    dateOfBirth: String
+    email: String
+    isAvailable: Boolean
+    isOnline: Boolean
+}
+
+type ConsultantPage {
+    content: [ConsultantProfileDTO]
+    totalPages: Int
+    totalElements: Int
+    size: Int
+    number: Int
+}
+
+type CallDTO {
+    id: ID
+    caller: UserDTO
+    recipient: UserDTO
+    recipientConsultant: UserDTO
+    createdAt: String
+    duration: Int
+    status: CallStatus
+    sum: Float
+    commission: Float
+    translatorHasRated: Boolean
+    consultantHasRated: Boolean
+    userHasRated: Boolean
+    file: FileDTO
+    theme: ThemeDTO
+}
+type RatingDTO {
+    id: ID!
+    whoUser: UserDTO!
+    toWhomUser: UserDTO!
+    createdAt: String
+    updatedAt: String
+    ratings: Float
+}
+type DebtorDTO {
+    id: ID!
+    accountHolder: String!
+    nameOfBank: String!
+    isPaid: Boolean!
+    createdAt: String
+    updatedAt: String
+    user: UserDTO
+}
+type DepositsDTO {
+    id: ID!
+    accountHolder: String
+    nameOfBank: String
+    coin: Float
+    won: Float
+    status: PaymentStatus
+    createdAt: String
+    updatedAt: String
+    user: UserDTO
+}
+type NotificationDTO {
+    id: ID!
+    title: String!
+    text: String!
+    date: String
+    time: String
+    user: UserDTO!
+}
+type WithdrawalsDTO {
+    id: ID!
+    accountNumber: String!
+    accountHolder: String!
+    sum: Float!
+    status: PaymentStatus
+    createdAt: String
+    updatedAt: String
+    user: UserDTO
+}
+type UsersAndWithdrawalsDTO {
+    user: UserDTO
+    withdrawals: [WithdrawalsDTO]
+}
+
+type PageInfo {
+    totalPages: Int!
+    totalElements: Int!
+    currentPage: Int!
+    pageSize: Int!
+}
+type CallPage {
+    content: [CallDTO!]!
+    pageInfo: PageInfo!
+}
+
+type RatingsPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [RatingDTO]
+}
+type CoinPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [CoinDTO]
+}
+
+type AppVersionPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [AppVersionDTO]
+}
+
+type CallPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [CallDTO]
+}
+
+type DebtorPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [DebtorDTO]
+}
+
+type NotificationPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [NotificationDTO]
+}
+
+type FrequentlyAskedQuestionPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [FrequentlyAskedQuestionsDTO]
+}
+type WithdrawalsPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [WithdrawalsDTO]
+}
+type LanguagePageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [LanguageDTO]
+}
+
+type UserProfilePageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [UserProfileDTO]
+}
+
+input CreateDebtorInput {
+    accountHolder: String!
+    nameOfBank: String!
+    isPaid: Boolean!
+    userId: ID!
+}
+input UpdateDebtorInput {
+    accountHolder: String!
+    nameOfBank: String!
+    isPaid: Boolean!
+}
+input CreateDepositsInput {
+    accountHolder: String!
+    nameOfBank: String!
+    coin: Float
+    status: PaymentStatus
+    won: Float
+    userId: ID!
+}
+input UpdateDepositsInput {
+    accountHolder: String!
+    nameOfBank: String!
+    status: PaymentStatus
+    coin: Float
+    won: Float
+}
+
+input CreateNotificationInput {
+    title: String!
+    text: String!
+    userId: ID!
+}
+input UpdateNotificationInput {
+    title: String!
+    text: String!
+}
+
+input CreateWithdrawalsInput {
+    accountNumber: String!
+    accountHolder: String!
+    sum: Float
+    status: PaymentStatus
+    userId: ID!
+}
+input UpdateWithdrawalsInput {
+    accountNumber: String!
+    accountHolder: String!
+    sum: Float
+    status: PaymentStatus
+}
+input CreateCategoryInput {
+    name: String!
+    isActive: Boolean!
+}
+input UpdateCategoryInput {
+    id: ID!
+    name: String
+    isActive: Boolean
+}
+input CreateCoinInput {
+    coin: Float!
+    won: Float!
+}
+input UpdateCoinInput {
+    id: ID!
+    coin: Float
+    won: Float
+}
+input CreateThemeInput {
+    name: String!
+    koreanTitle: String!
+    price: Float!
+    consultantPrice: Float!
+    nightPrice: Float!
+    description: String!
+    isPopular: Boolean!
+    isActive: Boolean!
+    categoryId: ID!
+    icon: Upload
+}
+input UpdateThemeInput {
+    id: ID!
+    name: String
+    koreanTitle: String
+    price: Float
+    consultantPrice: Float
+    nightPrice: Float
+    description: String
+    isPopular: Boolean
+    isActive: Boolean
+    categoryId: ID
+    icon: Upload
+}
+input CreateFrequentlyAskedQuestionsInput {
+    question: String!
+    answer: String!
+    category: QuestionsCategories!
+}
+input updateFrequentlyAskedQuestionsInput {
+    id: ID!
+    question: String
+    answer: String
+    category: QuestionsCategories
+}
+input PageInput {
+    pageNo: Int
+    pageSize: Int
+}
+input PagingInput {
+    pageNo: Int
+    pageSize: Int
+    sortBy: String
+    sort: ESort
+}
+
+input PagingInputAppVersion {
+    pageNo: Int
+    pageSize: Int
+    sortBy: String
+    sort: ESort
+}
+
+input UserInput {
+    phone: String!
+    password: String!
+    firstName: String!
+    lastName: String!
+}
+input TranslatorProfileInput {
+    dateOfBirth: String
+    email: String
+    isAvailable: Boolean
+    isOnline: Boolean
+    levelOfKorean: String
+    languages: [ID]
+}
+
+input ConsultantProfileInput {
+    dateOfBirth: String
+    email: String
+    isAvailable: Boolean
+    isOnline: Boolean
+    languages: [ID]
+}
+
+input LanguageInput {
+    name: String!
+}
+input RegisterUserInput {
+    phone: String!
+    password: String!
+}
+input RegisterTranslatorConsultantInput {
+    phone: String!
+    password: String!
+    email: String!
+}
+input LoginUserInput {
+    phone: String!
+    password: String!
+}
+input DebtorInput {
+    accountHolder: String
+    nameOfBank: String
+    isPaid: Boolean
+    userId: ID!
+}
+input DepositsInput {
+    accountHolder: String
+    nameOfBank: String
+    coin: Float
+    won: Float
+    status: String
+    userId: ID!
+}
+input CreateCallInput {
+    caller: ID!
+    recipient: ID!
+    theme: ID!
+    channelName: String
+}
+input CreateConsultantCallInput {
+    caller: ID!
+    recipient: ID!
+    recipientConsultant: ID!
+    theme: ID!
+    channelName: String
+}
+input CallUpdateInput {
+    duration: Int!
+    status: CallStatus!
+    commission: Float!
+}
+input RatingInput {
+    whoUserId: ID!
+    toWhomUserId: ID!
+    ratings: Float
+}
+input UpdateRatingInput {
+    ratings: Float!
+}
+input NotificationInput {
+    title: String
+    text: String
+    userId: ID!
+}
+input WithdrawalsInput {
+    accountNumber: String!
+    accountHolder: String!
+    sum: Float
+    status: Status
+    userId: ID!
+}
+
+enum EPlatform {
+    IOS
+    ANDROID
+}
+enum Status {
+    PENDING
+    COMPLETED
+    CANCELED
+}
+enum QuestionsCategories {
+    USER
+    TRANSLATOR
+    CONSULTANT
+}
+enum CallStatus {
+    MISSED_CALL
+    INCOMING_CALL
+    OUTGOING_CALL
+    COMPLETED
+}
+enum ESort {
+    DES
+    ASC
+}
+enum PaymentStatus {
+    PENDING
+    COMPLETED
+    FAILED
+    CANCELLED
+}
+
+enum UserStatus {
+    ONLINE
+    OFFLINE
+    BUSY
+}
+
+#scalar FileUpload
+scalar Upload
